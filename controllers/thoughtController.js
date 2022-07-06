@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongoose').Types;
-const { Thought } = require('../models');
+const { Thought, User } = require('../models');
 
 
 
@@ -39,8 +39,18 @@ module.exports = {
   // create a new thought
   createThought(req, res) {
     Thought.create(req.body)
-      .then((thought) => res.json(thought))
-      .catch((err) => res.status(500).json(err));
+      .then((thoughtData) => {
+        return User.findOneAndUpdate({_id:req.body.userId}, {$push:{thoughts: thoughtData._id}}, {new: true})
+      })
+      .then((userData) => {
+        if (!userData)
+            res.status(404).json({ message: 'thought created, but no user found' })
+
+        res.json({ message: 'Thought created' })
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err)});
   },
 
   // update a thought
@@ -70,6 +80,23 @@ module.exports = {
         !thought
           ? res.status(404).json({ message: 'No thought with that ID' })
           : res.json(user)
+      )
+      .catch((err) => {
+        console.log(err);
+        return res.status(500).json(err);
+      });
+  },
+
+  createReaction(req, res) {
+
+    Thought.findOneAndUpdate({ _id: req.params.thoughtId },
+        {$addToSet:{reactions:req.body}},
+        {new: true})
+      
+      .then(async (thought) =>
+        !thought
+          ? res.status(404).json({ message: 'No thought with that ID' })
+          : res.json(thought)
       )
       .catch((err) => {
         console.log(err);
