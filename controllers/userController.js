@@ -49,6 +49,29 @@ module.exports = {
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
   },
+
+  // update a user
+  updateUser(req, res) {
+    User.findOneAndUpdate({ _id: req.params.userId },
+        {$set:req.body},
+        {runValidators: true, new: true})
+      .select('-__v')
+      .then(async (user) =>
+        !user
+          ? res.status(404).json({ message: 'No user with that ID' })
+          : res.json(user)
+      )
+      .catch((err) => {
+        console.log(err);
+        return res.status(500).json(err);
+      });
+  },
+
+
+
+
+
+
 //   // Delete a student and remove them from the course
 //   deleteStudent(req, res) {
 //     Student.findOneAndRemove({ _id: req.params.studentId })
