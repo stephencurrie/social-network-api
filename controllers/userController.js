@@ -68,29 +68,37 @@ module.exports = {
   },
 
 
+  deleteUser(req, res) {
+    User.findOneAndDelete({ _id: req.params.userId },
 
+        {runValidators: true, new: true})
+      .select('-__v')
+      .then(async (user) =>
+        !user
+          ? res.status(404).json({ message: 'No user with that ID' })
+          : res.json(user)
+      )
+      .catch((err) => {
+        console.log(err);
+        return res.status(500).json(err);
+      });
+  },
 
 
 
 //   // Delete a student and remove them from the course
-//   deleteStudent(req, res) {
-//     Student.findOneAndRemove({ _id: req.params.studentId })
-//       .then((student) =>
-//         !student
-//           ? res.status(404).json({ message: 'No such student exists' })
-//           : Course.findOneAndUpdate(
-//               { students: req.params.studentId },
-//               { $pull: { students: req.params.studentId } },
-//               { new: true }
+//   deleteUser(req, res) {
+//     User.findOneAndDelete({ _id: req.params.userId })
+//       .then((user) =>
+//         !user
+//           ? res.status(404).json({ message: 'No such user exists' })
+//           : User.findOneAndDelete(
+//             //   { students: req.params.studentId },
+//             //   { $pull: { students: req.params.studentId } },
+//             //   { new: true }
 //             )
 //       )
-//       .then((course) =>
-//         !course
-//           ? res.status(404).json({
-//               message: 'Student deleted, but no courses found',
-//             })
-//           : res.json({ message: 'Student successfully deleted' })
-//       )
+ 
 //       .catch((err) => {
 //         console.log(err);
 //         res.status(500).json(err);
