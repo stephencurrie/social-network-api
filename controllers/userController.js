@@ -98,5 +98,23 @@ module.exports = {
       },
 
       // for delete a friend use pull instead of addToSet
+      // delete friend
+
+      deleteFriend(req, res) {
+
+        User.findOneAndUpdate({ _id: req.params.userId },
+            {$pull:{friends:req.params.friendId}},
+            {new: true})
+          
+          .then(async (user) =>
+            !user
+              ? res.status(404).json({ message: 'No friend with that ID' })
+              : res.json(user)
+          )
+          .catch((err) => {
+            console.log(err);
+            return res.status(500).json(err);
+          });
+      },
 
 };
