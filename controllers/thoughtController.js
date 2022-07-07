@@ -76,16 +76,17 @@ module.exports = {
 
         {runValidators: true, new: true})
       .select('-__v')
-      .then(async (user) =>
+      .then(async (thought) =>
         !thought
           ? res.status(404).json({ message: 'No thought with that ID' })
-          : res.json(user)
+          : res.json(thought)
       )
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
       });
   },
+
 
   createReaction(req, res) {
 
@@ -102,6 +103,41 @@ module.exports = {
         console.log(err);
         return res.status(500).json(err);
       });
+  },
+
+  deleteReaction(req, res) {
+
+    Thought.findOneAndUpdate({ _id: req.params.thoughtId },
+        {$pull: {reactions: req.params.reactionId}},
+        {new: true})
+      
+      .then(async (thought) =>
+        !thought
+          ? res.status(404).json({ message: 'No reaction with that ID' })
+          : res.json(thought)
+      )
+      .catch((err) => {
+        console.log(err);
+        return res.status(500).json(err);
+      });
+
+    //   User.findOneAndUpdate({ _id: req.params.userId },
+    //     {$pull:{friends:req.params.friendId}},
+    //     {new: true})
+      
+    //   .then(async (user) =>
+    //     !user
+    //       ? res.status(404).json({ message: 'No friend with that ID' })
+    //       : res.json(user)
+    //   )
+    //   .catch((err) => {
+    //     console.log(err);
+    //     return res.status(500).json(err);
+    //   });
+
+
+
+
   },
 
 

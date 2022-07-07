@@ -1,11 +1,11 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 const moment = require('moment');
 
 // Schema to create reaction model
 
 const reactionSchema = new Schema(
     {
-    // Set custom ID 
+  //  Set custom ID 
     reactionId: {
         type: Schema.Types.ObjectId,
         default: ()=> new Types.ObjectId()
@@ -67,7 +67,10 @@ const thoughtSchema = new Schema(
 
   );
 
-
+        // Create a virtual property `reactionCount` that retrieves the length of the thought's reactions array field on query
+        thoughtSchema.virtual('reactionCount').get(function () {
+            return this.reactions.length;
+          });
 
 
 
