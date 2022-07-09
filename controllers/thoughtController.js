@@ -59,7 +59,7 @@ module.exports = {
         {$set:req.body},
         {runValidators: true, new: true})
       .select('-__v')
-      .then(async (user) =>
+      .then(async (thought) =>
         !thought
           ? res.status(404).json({ message: 'No thought with that ID' })
           : res.json(thought)
@@ -70,6 +70,24 @@ module.exports = {
       });
   },
 
+    // update a user
+    // updateUser(req, res) {
+    //     User.findOneAndUpdate({ _id: req.params.userId },
+    //         {$set:req.body},
+    //         {runValidators: true, new: true})
+    //       .select('-__v')
+    //       .then(async (user) =>
+    //         !user
+    //           ? res.status(404).json({ message: 'No user with that ID' })
+    //           : res.json(user)
+    //       )
+    //       .catch((err) => {
+    //         console.log(err);
+    //         return res.status(500).json(err);
+    //       });
+    //   },
+
+// delete a thought
 
   deleteThought(req, res) {
     Thought.findOneAndDelete({ _id: req.params.thoughtId },
@@ -105,10 +123,12 @@ module.exports = {
       });
   },
 
+// delete a reaction
+
   deleteReaction(req, res) {
 
     Thought.findOneAndUpdate({ _id: req.params.thoughtId },
-     //   {$pull: {reactions: req.params.reactionId}},
+
         {$pull: {reactions: {reactionId: req.params.reactionId}}},
         {new: true})
       
@@ -123,24 +143,6 @@ module.exports = {
         return res.status(500).json(err);
       });
 
-    //   User.findOneAndUpdate({ _id: req.params.userId },
-    //     {$pull:{friends:req.params.friendId}},
-    //     {new: true})
-      
-    //   .then(async (user) =>
-    //     !user
-    //       ? res.status(404).json({ message: 'No friend with that ID' })
-    //       : res.json(user)
-    //   )
-    //   .catch((err) => {
-    //     console.log(err);
-    //     return res.status(500).json(err);
-    //   });
-
-
-
-
   },
-
 
 };

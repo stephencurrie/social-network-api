@@ -10,7 +10,6 @@ module.exports = {
       .then(async (users) => {
         const userObj = {
           users,
-        //   userCount: await userCount(),
         };
         return res.json(userObj);
       })
@@ -61,6 +60,7 @@ module.exports = {
       });
   },
 
+  // delete a user
 
   deleteUser(req, res) {
     User.findOneAndDelete({ _id: req.params.userId },
@@ -97,7 +97,6 @@ module.exports = {
           });
       },
 
-      // for delete a friend use pull instead of addToSet
       // delete friend
 
       deleteFriend(req, res) {
